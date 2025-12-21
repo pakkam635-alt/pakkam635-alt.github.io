@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>K2 — The Savage Mountain (Interactive Mini Site)</title>
+  <meta name="description" content="A stylish interactive one-page website with animations and random content about K2." />
+  <style>
+    :root{
+      --bg0:#06070b;
+      --bg1:#0b1020;
+      --card:#0f1732cc;
+      --card2:#0f1732aa;
+      --text:#e9eeff;
+      --muted:#a9b4e6;
+      --muted2:#94a0d6;
+      --accent:#8be9fd;
+      --accent2:#a78bfa;
+      --accent3:#34d399;
+      --warn:#fbbf24;
+      --danger:#fb7185;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --shadow2: 0 10px 35px rgba(0,0,0,.35);
+      --border: 1px solid rgba(255,255,255,.10);
+      --radius: 18px;
+      --radius2: 26px;
+      --blur: 16px;
+      --max: 1160px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 900px at 10% -10%, rgba(167,139,250,.32), transparent 55%),
+                  radial-gradient(900px 700px at 80% 0%, rgba(139,233,253,.22), transparent 50%),
+                  radial-gradient(900px 700px at 40% 110%, rgba(52,211,153,.14), transparent 55%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+      line-height:1.5;
+    }
+
+    /* subtle animated grain */
+    .grain{
+      pointer-events:none;
+      position:fixed; inset:-40%;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+      opacity:.22;
+      transform:translateZ(0);
+      animation: drift 16s linear infinite;
+    }
+    @keyframes drift{
+      0%{ transform:translate(-6%, -4%) rotate(0deg); }
+      50%{ transform:translate(4%, 6%) rotate(2deg); }
+      100%{ transform:translate(-6%, -4%) rotate(0deg); }
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width:var(--max); margin:0 auto; padding: 0 18px; }
+
+    /* Top nav */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(var(--blur));
+      background: linear-gradient(180deg, rgba(9,12,22,.78), rgba(9,12,22,.48));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 0;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      user-select:none;
+    }
+    .badge{
+      width:38px; height:38px; border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(139,233,253,.9), rgba(167,139,250,.8) 55%, rgba(52,211,153,.55));
+      box-shadow: 0 12px 30px rgba(139,233,253,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    .badge:after{
+      content:"";
+      position:absolute; inset:-40%;
+      background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.35), transparent 45%);
+      transform: rotate(18deg);
+    }
+    .brand h1{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(233,238,255,.92);
+    }
+    .brand small{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.02em;
+      margin-top:2px;
+    }
+
+    .nav-links{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+      align-items:center;
+    }
+    .pill{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+      font-size:13px;
+      color: rgba(233,238,255,.9);
+      display:inline-flex; align-items:center; gap:8px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.16); }
+    .pill:active{ transform: translateY(0px) scale(.99); }
+
+    .btn{
+      padding:10px 12px;
+      border-radius:999px;
+      border: none;
+      color: rgba(8,10,16,.92);
+      background: linear-gradient(135deg, rgba(139,233,253,.95), rgba(167,139,250,.95));
+      box-shadow: 0 14px 45px rgba(167,139,250,.25);
+      font-weight:650;
+      letter-spacing:.02em;
+    }
+    .btn:hover{ filter:saturate(1.05) brightness(1.02); transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+
+    /* Hero */
+    .hero{
+      position:relative;
+      padding: 70px 0 26px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns:1fr; }
+    }
+
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: var(--border);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
+      overflow:hidden;
+      position:relative;
+    }
+    .hero-left{ padding: 26px 22px 22px; }
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(233,238,255,.9);
+      font-size:13px;
+      letter-spacing:.02em;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--accent3);
+      box-shadow: 0 0 0 6px rgba(52,211,153,.18);
+    }
+    .hero h2{
+      margin: 14px 0 8px;
+      font-size: clamp(30px, 4.3vw, 56px);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+    .hero p{
+      margin: 0 0 16px;
+      color: rgba(233,238,255,.78);
+      font-size: 15.5px;
+      max-width: 62ch;
+    }
+    .cta-row{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 16px;
+      align-items:center;
+    }
+
+    .hero-right{
+      padding: 0;
+      min-height: 340px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    /* Parallax mountain "image" generated via SVG bg */
+    .mountain-visual{
+      position:relative;
+      min-height: 340px;
+      border-radius: var(--radius2);
+      overflow:hidden;
+      background:
+        radial-gradient(500px 260px at 20% 25%, rgba(139,233,253,.25), transparent 60%),
+        radial-gradient(540px 300px at 85% 20%, rgba(167,139,250,.28), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23070a16'/%3E%3Cstop offset='1' stop-color='%230b1636'/%3E%3C/linearGradient%3E%3ClinearGradient id='ice' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23bfe7ff' stop-opacity='.95'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='.6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='900' fill='url(%23sky)'/%3E%3Ccircle cx='1230' cy='170' r='88' fill='%23a78bfa' opacity='.35'/%3E%3Ccircle cx='1320' cy='220' r='120' fill='%238be9fd' opacity='.22'/%3E%3Cpath d='M0 720 C240 610 360 650 520 560 C680 470 760 450 920 520 C1080 590 1200 520 1400 610 C1500 680 1560 690 1600 680 L1600 900 L0 900 Z' fill='%2306112b' opacity='.85'/%3E%3Cpath d='M110 745 L520 360 L760 610 L920 450 L1310 760 Z' fill='%230a1a44' opacity='.95'/%3E%3Cpath d='M520 360 L610 500 L760 610 L700 520 Z' fill='%23122a63' opacity='.95'/%3E%3Cpath d='M920 450 L1040 590 L1310 760 L1120 560 Z' fill='%23112a63' opacity='.92'/%3E%3Cpath d='M520 360 L610 500 L700 520 L590 420 Z' fill='url(%23ice)' opacity='.75'/%3E%3Cpath d='M920 450 L1120 560 L1040 590 L980 520 Z' fill='url(%23ice)' opacity='.7'/%3E%3Cpath d='M310 820 C440 760 530 770 650 820 C760 870 900 860 1030 810 C1140 770 1320 760 1490 840 L1490 900 L310 900 Z' fill='%23060a16' opacity='.8'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      transform: translateZ(0);
+    }
+
+    .visual-overlay{
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      justify-content:space-between;
+      padding: 16px;
+      pointer-events:none;
+    }
+
+    .stats{
+      display:flex; gap:10px; flex-wrap:wrap;
+      pointer-events:none;
+    }
+    .stat{
+      pointer-events:none;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(10,14,28,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      min-width: 140px;
+    }
+    .stat b{ display:block; font-size:14px; }
+    .stat span{ display:block; font-size:12px; color: rgba(233,238,255,.72); margin-top:2px; }
+
+    .now-playing{
+      pointer-events:auto;
+      align-self:flex-end;
+      max-width: 360px;
+      background: rgba(10,14,28,.60);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 12px 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .np-title{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .np-title b{ font-size:13px; letter-spacing:.02em; }
+    .np-title small{ color: rgba(233,238,255,.72); font-size:12px; }
+    .progress{
+      height:8px; border-radius:999px;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:35%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius:999px;
+      transition: width .35s ease;
+    }
+
+    /* Sections */
+    section{ padding: 26px 0; }
+    .section-title{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      margin: 6px 0 14px;
+    }
+    .section-title h3{
+      margin:0;
+      font-size: 20px;
+      letter-spacing:-.01em;
+    }
+    .section-title p{
+      margin:0;
+      color: rgba(233,238,255,.70);
+      font-size: 13px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 920px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(var(--blur));
+      overflow:hidden;
+      position:relative;
+    }
+    .card .pad{ padding: 16px; }
+    .card h4{ margin:0 0 8px; font-size: 16px; letter-spacing:-.01em; }
+    .muted{ color: rgba(233,238,255,.74); }
+    .meta{ color: rgba(233,238,255,.62); font-size: 12.5px; }
+
+    /* Fancy list */
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(233,238,255,.88);
+      font-size: 12.5px;
+    }
+    .chip i{
+      width:10px; height:10px; border-radius:50%;
+      background: rgba(255,255,255,.35);
+      box-shadow: 0 0 0 6px rgba(255,255,255,.05);
+    }
+
+    /* Gallery */
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+    .shot{
+      grid-column: span 4;
+      min-height: 220px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+      position:relative;
+      cursor:pointer;
+      transform: translateZ(0);
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+    .shot:hover{
+      transform: translateY(-2px);
+      border-color: rgba(139,233,253,.22);
+      background: rgba(139,233,253,.05);
+    }
+    .shot:active{ transform: translateY(0px) scale(.995); }
+    .shot img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      filter:saturate(1.05) contrast(1.02);
+      transform: scale(1.02);
+      transition: transform .6s ease;
+    }
+    .shot:hover img{ transform: scale(1.06); }
+    .shot .cap{
+      position:absolute; left:12px; right:12px; bottom:12px;
+      padding:10px 12px;
+      border-radius: 14px;
+      background: rgba(6,7,11,.58);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .cap b{ font-size:12.5px; letter-spacing:.02em; }
+    .cap span{ font-size:12px; color: rgba(233,238,255,.70); }
+
+    @media (max-width: 980px){ .shot{ grid-column: span 6; } }
+    @media (max-width: 640px){ .shot{ grid-column: span 12; } }
+
+    /* Timeline */
+    .timeline{
+      display:grid;
+      gap: 12px;
+    }
+    .event{
+      display:flex; gap:12px;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      align-items:flex-start;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .event:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.06);
+      border-color: rgba(167,139,250,.22);
+    }
+    .stamp{
+      flex:0 0 auto;
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(139,233,253,.75), rgba(167,139,250,.75));
+      box-shadow: 0 12px 35px rgba(139,233,253,.16);
+      position:relative;
+    }
+    .stamp:after{
+      content:"";
+      position:absolute; inset:10px;
+      border-radius:10px;
+      background: rgba(6,7,11,.35);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .event b{ display:block; font-size: 13.5px; }
+    .event p{ margin: 4px 0 0; color: rgba(233,238,255,.72); font-size: 13px; }
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      place-items:center;
+      z-index:100;
+      background: rgba(3,5,10,.68);
+      backdrop-filter: blur(10px);
+      padding: 18px;
+    }
+    .modal.show{ display:grid; animation: fadeIn .18s ease; }
+    @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+    .modal-card{
+      width:min(980px, 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      box-shadow: 0 26px 90px rgba(0,0,0,.55);
+      overflow:hidden;
+      transform: translateY(6px) scale(.99);
+      animation: pop .22s ease forwards;
+    }
+    @keyframes pop{
+      to{ transform: translateY(0) scale(1); }
+    }
+
+    .modal-top{
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 12px 12px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .modal-top b{ font-size: 13px; letter-spacing:.02em; }
+    .x{
+      width:38px; height:38px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      cursor:pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .x:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+    .x:active{ transform: translateY(0px) scale(.99); }
+
+    .modal-body{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 0;
+    }
+    @media (max-width: 900px){ .modal-body{ grid-template-columns: 1fr; } }
+    .modal-media{
+      background: rgba(0,0,0,.25);
+      min-height: 360px;
+    }
+    .modal-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .modal-info{ padding: 14px; }
+    .modal-info h4{ margin:0 0 8px; font-size: 18px; letter-spacing:-.01em; }
+    .modal-info p{ margin:0 0 10px; color: rgba(233,238,255,.74); }
+    .kv{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px; }
+    .kv .k{
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .kv .k small{ display:block; color: rgba(233,238,255,.62); font-size: 12px; }
+    .kv .k b{ display:block; margin-top:2px; font-size: 13px; }
+
+    /* reveal animation */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity .7s ease, transform .7s ease;
+      will-change: opacity, transform;
+    }
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    /* Footer */
+    footer{
+      padding: 34px 0 60px;
+      color: rgba(233,238,255,.60);
+      font-size: 12.5px;
+    }
+    .foot{
+      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 16px;
+    }
+
+    /* little floating hint */
+    .toast{
+      position:fixed;
+      right: 16px;
+      bottom: 16px;
+      max-width: 360px;
+      z-index: 60;
+      border-radius: 18px;
+      background: rgba(10,14,28,.70);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      padding: 12px 12px;
+      display:flex; gap:10px; align-items:flex-start;
+      transform: translateY(18px);
+      opacity:0;
+      pointer-events:none;
+      transition: transform .35s ease, opacity .35s ease;
+    }
+    .toast.show{ transform: translateY(0); opacity:1; pointer-events:auto; }
+    .toast .spark{
+      width:34px; height:34px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(251,191,36,.9), rgba(251,113,133,.85));
+      box-shadow: 0 14px 40px rgba(251,113,133,.20);
+      position:relative;
+    }
+    .toast .spark:after{
+      content:"";
+      position:absolute; inset:9px;
+      border-radius: 10px;
+      background: rgba(6,7,11,.35);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .toast b{ font-size:13px; }
+    .toast p{ margin: 4px 0 0; color: rgba(233,238,255,.72); font-size: 12.5px; }
+    .toast .mini{
+      margin-left:auto;
+      display:flex; gap:8px; align-items:center;
+    }
+    .toast .mini button{
+      border:none;
+      border-radius: 999px;
+      padding: 8px 10px;
+      cursor:pointer;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(233,238,255,.90);
+      transition: transform .2s ease, background .2s ease;
+      font-size: 12.5px;
+    }
+    .toast .mini button:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); }
+    .toast .mini button:active{ transform: translateY(0px) scale(.99); }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">
+        <div class="badge" aria-hidden="true"></div>
+        <div>
+          <h1>K2 / Mini Atlas</h1>
+          <small>interactive UI • smooth motion • offline gallery</small>
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a class="pill" href="#overview">Overview</a>
+        <a class="pill" href="#gallery">Gallery</a>
+        <a class="pill" href="#timeline">Timeline</a>
+        <a class="pill" href="#facts">Fact Cards</a>
+        <button class="btn" id="randomizeBtn" type="button" title="Shuffle the page content">Shuffle</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="glass hero-left reveal">
+          <div class="kicker">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="kickerText">High drama, high altitude.</span>
+          </div>
+          <h2 id="heroTitle">K2: where the sky feels close enough to scrape.</h2>
+          <p id="heroDesc">
+            This is a stylish one-page “mini site” with motion, transitions, and interactive cards—
+            packed with playful, randomly-generated content about K2 (also known as the Savage Mountain).
+          </p>
+
+          <div class="cta-row">
+            <a class="pill" href="#gallery" id="exploreBtn">Explore the visuals →</a>
+            <button class="pill" type="button" id="ambientBtn" title="Toggle ambient motion">
+              Ambient Motion: <span id="ambientState">On</span>
+            </button>
+            <button class="pill" type="button" id="copyBtn" title="Copy a random K2 caption">
+              Copy caption
+            </button>
+          </div>
+
+          <div class="chips" id="tagChips" aria-label="Tags"></div>
+        </div>
+
+        <div class="glass hero-right reveal">
+          <div class="mountain-visual" id="parallaxHero" aria-label="Stylized mountain hero image">
+            <div class="visual-overlay">
+              <div class="stats" aria-label="Quick stats">
+                <div class="stat">
+                  <b id="statA">8,611 m</b>
+                  <span>Peak height (commonly cited)</span>
+                </div>
+                <div class="stat">
+                  <b id="statB">Karakoram</b>
+                  <span>Range & region vibe</span>
+                </div>
+                <div class="stat">
+                  <b id="statC">Austere</b>
+                  <span>Weather, exposure, objective hazards</span>
+                </div>
+              </div>
+
+              <div class="now-playing" aria-label="Ambient UI widget">
+                <div class="np-title">
+                  <b>Summit weather simulator</b>
+                  <small id="npMeta">gusts building…</small>
+                </div>
+                <div class="progress" aria-hidden="true"><div class="bar" id="npBar"></div></div>
+                <div style="display:flex; justify-content:space-between; margin-top:8px;">
+                  <span class="meta" id="npLeft">Visibility: “knife-edge”</span>
+                  <span class="meta" id="npRight">Temp: “bruised cold”</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="overview">
+      <div class="section-title">
+        <div>
+          <h3>Overview</h3>
+          <p>Cards with hover glow, soft gradients, and micro-interactions.</p>
+        </div>
+        <div class="meta" id="lastShuffle">No shuffle yet</div>
+      </div>
+
+      <div class="grid">
+        <article class="card reveal">
+          <div class="pad">
+            <h4 id="ov1Title">A mountain with a reputation</h4>
+            <p class="muted" id="ov1Body">
+              K2 is often described as technically demanding and unforgiving. This page leans into the
+              mood: sharp ridgelines, cold light, and decisions that matter.
+            </p>
+            <div class="chips" id="ov1Chips"></div>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="pad">
+            <h4 id="ov2Title">The “mini atlas” idea</h4>
+            <p class="muted" id="ov2Body">
+              Instead of a wall of text, explore fragments—gallery shots, timeline beats, and fact cards.
+              Hit Shuffle to remix the narrative and UI accents.
+            </p>
+            <div class="chips" id="ov2Chips"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <div class="section-title">
+        <div>
+          <h3>Gallery</h3>
+          <p>Tap any image for a modal view with details.</p>
+        </div>
+        <div class="meta">Offline-friendly SVG “photos”</div>
+      </div>
+
+      <div class="gallery" id="galleryGrid" aria-label="K2 gallery"></div>
+    </section>
+
+    <section id="timeline">
+      <div class="section-title">
+        <div>
+          <h3>Timeline fragments</h3>
+          <p>Not exhaustive—just atmosphere, progress, and setbacks.</p>
+        </div>
+        <div class="meta">Hover to lift</div>
+      </div>
+
+      <div class="timeline" id="timelineList"></div>
+    </section>
+
+    <section id="facts">
+      <div class="section-title">
+        <div>
+          <h3>Fact cards</h3>
+          <p>Click a card to “pin” it (and change its glow).</p>
+        </div>
+        <div class="meta">Interactive state</div>
+      </div>
+
+      <div class="grid" id="factsGrid"></div>
+    </section>
+
+    <footer>
+      <div class="foot">
+        <div>Built as a single HTML file: rich CSS + JS interactions, no external assets.</div>
+        <div>Tip: move your mouse over the hero image for parallax.</div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Gallery modal">
+    <div class="modal-card">
+      <div class="modal-top">
+        <b id="modalTitle">Shot</b>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="meta" id="modalMeta">—</span>
+          <div class="x" id="modalClose" aria-label="Close modal" title="Close">✕</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-media"><img id="modalImg" alt="Selected gallery image"/></div>
+        <div class="modal-info">
+          <h4 id="modalH">A ridge of glassy light</h4>
+          <p id="modalP">
+            A stylized “photo” generated on the fly. Use Shuffle to generate new captions and palettes.
+          </p>
+          <div class="kv">
+            <div class="k"><small>Scene</small><b id="kv1">Blue-hour traverse</b></div>
+            <div class="k"><small>Feeling</small><b id="kv2">Focused, quiet</b></div>
+            <div class="k"><small>UI</small><b id="kv3">Modal + transitions</b></div>
+            <div class="k"><small>Detail</small><b id="kv4">SVG gradients</b></div>
+          </div>
+          <div class="chips" id="modalChips" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="spark" aria-hidden="true"></div>
+    <div>
+      <b id="toastTitle">Copied</b>
+      <p id="toastMsg">Caption copied to clipboard.</p>
+    </div>
+    <div class="mini">
+      <button id="toastHideBtn" type="button">Hide</button>
+    </div>
+  </div>
+
+  <script>
+    // -----------------------------
+    // Content pools (playful + "random")
+    // -----------------------------
+    const POOL = {
+      kicker: [
+        "High drama, high altitude.",
+        "A cathedral of ice and risk.",
+        "Where wind edits your plans.",
+        "Granite, serac, and stubbornness.",
+        "A lesson in patience and weather."
+      ],
+      heroTitle: [
+        "K2: where the sky feels close enough to scrape.",
+        "K2: a blade of mountain cutting into weather.",
+        "K2: a summit that doesn’t negotiate.",
+        "K2: moonlight on rock, and decisions in the dark.",
+        "K2: the savage geometry of ambition."
+      ],
+      heroDesc: [
+        "This is a stylish one-page “mini site” with motion, transitions, and interactive cards—packed with playful, randomly-generated content about K2 (also known as the Savage Mountain).",
+        "Scroll through fragments: a parallax hero, a generated ‘photo’ gallery, timeline beats, and fact cards. Tap Shuffle to remix captions, tags, and UI details.",
+        "A clean UI doesn’t have to be quiet. Here, gradients glow, cards lift, and content about K2 is delivered in bite-sized, remixable scenes."
+      ],
+      tags: ["Karakoram", "Baltoro", "Abruzzi Spur", "Seracs", "Granite", "Jetstream", "High camp", "Crevasse", "Summit push", "Oxygen debate", "Stormbound", "Alpenglow"],
+      overviewA: [
+        { t: "A mountain with a reputation", b: "K2 is often described as technically demanding and unforgiving. This page leans into the mood: sharp ridgelines, cold light, and decisions that matter." },
+        { t: "Steepness with consequence", b: "The lines on K2 look like routes drawn with a ruler—until the weather arrives. Then every clean edge becomes a question." },
+        { t: "Not just a number", b: "8,611 meters is a headline, but K2’s character is in its angles, exposure, and the way it compresses time when storms roll in." }
+      ],
+      overviewB: [
+        { t: "The “mini atlas” idea", b: "Instead of a wall of text, explore fragments—gallery shots, timeline beats, and fact cards. Hit Shuffle to remix the narrative and UI accents." },
+        { t: "UI that breathes", b: "Hover glows, soft shadows, and transitions give the interface momentum—like a slow, careful traverse across a ridge." },
+        { t: "Story in pieces", b: "A mountain is never one story. Here it’s shards: light, gear, waiting, routes, and the thin line between ‘go’ and ‘no’." }
+      ],
+      ovChipsA: [
+        ["Exposure", "Route finding", "Objective hazards", "Thin air"],
+        ["Angles", "Wind", "Cold management", "Timing"],
+        ["Decision points", "Team rhythm", "Weather windows", "Risk"]
+      ],
+      ovChipsB: [
+        ["Shuffle content", "Modal gallery", "Scroll reveal", "Micro-interactions"],
+        ["Smooth motion", "Glassmorphism", "Responsive layout", "Offline assets"],
+        ["Fragments", "Cards", "Timelines", "Captions"]
+      ],
+      timeline: [
+        { title:"Approach: glacier highway", body:"Days of movement, days of scale. The mountain grows—slowly at first, then suddenly." },
+        { title:"Base camp: routines in thin air", body:"Melt snow, check forecasts, stare at the ridge lines like they’re sentences." },
+        { title:"Acclimatization: climb high, sleep low", body:"Small pushes upward. The body argues, adapts, and asks for another day." },
+        { title:"Storm cycle: waiting becomes the work", body:"Tents drum. Plans shrink. You learn the sound of wind changing its mind." },
+        { title:"Weather window: the mountain briefly loosens its grip", body:"A narrow opening. The team moves like a single thought." },
+        { title:"Summit push: altitude turns minutes into chapters", body:"Headlamps, crunching steps, and a horizon that refuses to get closer." }
+      ],
+      facts: [
+        { t:"Nickname vibe", b:"K2 is often called the “Savage Mountain,” a reflection of its steepness, exposure, and notoriously serious conditions." },
+        { t:"Where it sits", b:"K2 rises in the Karakoram near the Pakistan–China border region, among glaciers and vast granite walls." },
+        { t:"Route names sound like legends", b:"You’ll hear names like “Abruzzi Spur” and imagine a clean line—then remember the line is made of ice, rock, and weather." },
+        { t:"The real boss is timing", b:"On big peaks, ‘can we?’ often becomes ‘can we now?’ Weather windows can be brief and brutally decisive." }
+      ],
+      feelings: ["Focused", "Storm-wary", "Quietly determined", "Hyper-aware", "Steady", "Tense but calm"],
+      scenes: ["Blue-hour traverse", "Wind-sculpted ridge", "Moonlit camp", "Granite shoulder", "Icefall corridor", "Alpenglow pause"],
+      details: ["Subtle parallax", "Soft shadows", "SVG gradients", "Scroll reveal", "Modal transitions", "Hover lift"],
+      captions: [
+        "A ridge like a question mark.",
+        "Cold light over colder decisions.",
+        "Wind writes its own route.",
+        "The summit is a rumor until it isn’t.",
+        "Granite and sky negotiating in silence."
+      ]
+    };
+
+    // -----------------------------
+    // Helpers
+    // -----------------------------
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+    const rand = (arr) => arr[Math.floor(Math.random()*arr.length)];
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+    function makeChips(target, labels){
+      target.innerHTML = "";
+      labels.forEach((txt, i) => {
+        const d = document.createElement("span");
+        d.className = "chip";
+        d.innerHTML = `<i aria-hidden="true"></i>${txt}`;
+        target.appendChild(d);
+      });
+    }
+
+    // SVG “photo” generator for offline gallery
+    function makeShotDataURI(seed){
+      // deterministically-ish shift based on seed
+      const hueA = (210 + seed*37) % 360;
+      const hueB = (280 + seed*29) % 360;
+      const hueC = (155 + seed*41) % 360;
+
+      const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="hsl(${hueA} 70% 12%)"/>
+            <stop offset="1" stop-color="hsl(${hueA} 70% 18%)"/>
+          </linearGradient>
+          <radialGradient id="glow" cx="70%" cy="20%" r="60%">
+            <stop offset="0" stop-color="hsla(${hueB}, 80%, 70%, .35)"/>
+            <stop offset="1" stop-color="hsla(${hueB}, 80%, 60%, 0)"/>
+          </radialGradient>
+          <linearGradient id="ice" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="hsla(${hueC}, 90%, 85%, .92)"/>
+            <stop offset="1" stop-color="hsla(${hueC}, 90%, 96%, .55)"/>
+          </linearGradient>
+          <filter id="n">
+            <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0.4"/>
+            <feComponentTransfer>
+              <feFuncA type="table" tableValues="0 0.12"/>
+            </feComponentTransfer>
+          </filter>
+        </defs>
+        <rect width="1600" height="1000" fill="url(#g1)"/>
+        <rect width="1600" height="1000" fill="url(#glow)"/>
+        <path d="M0 780 C240 650 420 740 620 610 C820 480 980 520 1120 610 C1260 700 1400 640 1600 720 L1600 1000 L0 1000 Z"
+              fill="hsla(${hueA}, 70%, 9%, .85)"/>
+        <path d="M140 860 L610 360 L820 610 L980 430 L1400 880 Z"
+              fill="hsla(${hueA}, 80%, 16%, .98)"/>
+        <path d="M610 360 L720 520 L820 610 L760 520 Z"
+              fill="hsla(${hueA}, 85%, 22%, .95)"/>
+        <path d="M980 430 L1100 590 L1400 880 L1220 560 Z"
+              fill="hsla(${hueA}, 85%, 22%, .92)"/>
+        <path d="M610 360 L720 520 L760 520 L690 430 Z" fill="url(#ice)" opacity=".75"/>
+        <path d="M980 430 L1220 560 L1100 590 L1040 510 Z" fill="url(#ice)" opacity=".70"/>
+        <path d="M220 920 C380 840 520 860 690 920 C860 980 1040 960 1180 900 C1320 850 1460 850 1600 920 L1600 1000 L220 1000 Z"
+              fill="hsla(${hueA}, 65%, 7%, .90)"/>
+        <rect width="1600" height="1000" filter="url(#n)" opacity=".35"/>
+      </svg>`.trim();
+
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+
+    // -----------------------------
+    // Build UI
+    // -----------------------------
+    const state = {
+      ambient: true,
+      pinned: new Set(),
+      shots: []
+    };
+
+    function buildTagChips(){
+      const tags = new Set();
+      while(tags.size < 7) tags.add(rand(POOL.tags));
+      makeChips($("#tagChips"), [...tags]);
+    }
+
+    function buildOverview(){
+      const a = rand(POOL.overviewA);
+      const b = rand(POOL.overviewB);
+      $("#ov1Title").textContent = a.t;
+      $("#ov1Body").textContent = a.b;
+      $("#ov2Title").textContent = b.t;
+      $("#ov2Body").textContent = b.b;
+
+      makeChips($("#ov1Chips"), rand(POOL.ovChipsA));
+      makeChips($("#ov2Chips"), rand(POOL.ovChipsB));
+    }
+
+    function buildGallery(){
+      const grid = $("#galleryGrid");
+      grid.innerHTML = "";
+
+      state.shots = Array.from({length: 6}).map((_, i) => {
+        const seed = Math.floor(Math.random()*999) + i*11;
+        const caption = rand(POOL.captions);
+        return {
+          id: "shot-" + i,
+          seed,
+          title: rand(POOL.scenes),
+          caption,
+          mood: rand(POOL.feelings),
+          detail: rand(POOL.details),
+          src: makeShotDataURI(seed)
+        };
+      });
+
+      state.shots.forEach((s, idx) => {
+        const d = document.createElement("div");
+        d.className = "shot reveal";
+        d.dataset.idx = idx;
+        d.innerHTML = `
+          <img alt="${s.title}" src="${s.src}">
+          <div class="cap">
+            <div>
+              <b>${s.title}</b>
+              <span>${s.caption}</span>
+            </div>
+            <span class="meta">Tap</span>
+          </div>
+        `;
+        d.addEventListener("click", () => openModal(idx));
+        grid.appendChild(d);
+      });
+    }
+
+    function buildTimeline(){
+      const list = $("#timelineList");
+      list.innerHTML = "";
+      const picks = [...POOL.timeline].sort(() => Math.random() - 0.5).slice(0, 5);
+      picks.forEach((e) => {
+        const row = document.createElement("div");
+        row.className = "event reveal";
+        row.innerHTML = `
+          <div class="stamp" aria-hidden="true"></div>
+          <div>
+            <b>${e.title}</b>
+            <p>${e.body}</p>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function buildFacts(){
+      const grid = $("#factsGrid");
+      grid.innerHTML = "";
+      const picks = [...POOL.facts].sort(() => Math.random() - 0.5).slice(0, 4);
+
+      picks.forEach((f, i) => {
+        const card = document.createElement("article");
+        card.className = "card reveal";
+        card.dataset.fact = i;
+        card.innerHTML = `
+          <div class="pad">
+            <h4>${f.t}</h4>
+            <p class="muted">${f.b}</p>
+            <div class="chips" style="margin-top:10px;">
+              <span class="chip"><i aria-hidden="true"></i>${rand(POOL.tags)}</span>
+              <span class="chip"><i aria-hidden="true"></i>${rand(POOL.tags)}</span>
+              <span class="chip"><i aria-hidden="true"></i>${rand(POOL.tags)}</span>
+            </div>
+            <p class="meta" style="margin-top:12px;">Click to pin</p>
+          </div>
+        `;
+        card.addEventListener("click", () => togglePin(card, i));
+        grid.appendChild(card);
+      });
+    }
+
+    function togglePin(card, i){
+      const key = "fact-" + i;
+      if(state.pinned.has(key)){
+        state.pinned.delete(key);
+        card.style.borderColor = "rgba(255,255,255,.10)";
+        card.style.background = "linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03))";
+        showToast("Unpinned", "Card returned to normal glow.");
+      }else{
+        state.pinned.add(key);
+        card.style.borderColor = "rgba(52,211,153,.32)";
+        card.style.background = "linear-gradient(180deg, rgba(52,211,153,.14), rgba(255,255,255,.03))";
+        showToast("Pinned", "This card is now highlighted.");
+      }
+    }
+
+    function setHero(){
+      $("#kickerText").textContent = rand(POOL.kicker);
+      $("#heroTitle").textContent = rand(POOL.heroTitle);
+      $("#heroDesc").textContent = rand(POOL.heroDesc);
+
+      // quick stat flavor changes
+      const a = ["8,611 m", "28,251 ft", "High 8000s", "Thin-air zone"];
+      const b = ["Karakoram", "Glacier country", "Borderland peaks", "Granite + ice"];
+      const c = ["Austere", "Technical", "Weather-led", "Unforgiving"];
+      $("#statA").textContent = rand(a);
+      $("#statB").textContent = rand(b);
+      $("#statC").textContent = rand(c);
+    }
+
+    function shuffleAll(){
+      setHero();
+      buildTagChips();
+      buildOverview();
+      buildGallery();
+      buildTimeline();
+      buildFacts();
+
+      // update timestamp
+      const now = new Date();
+      $("#lastShuffle").textContent = "Last shuffle: " + now.toLocaleString();
+
+      // refresh reveal observer targets
+      observeReveals();
+      kickWeatherWidget();
+      // gentle scroll nudge
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // -----------------------------
+    // Modal interactions
+    // -----------------------------
+    const modal = $("#modal");
+    const modalClose = $("#modalClose");
+
+    function openModal(idx){
+      const s = state.shots[idx];
+      $("#modalTitle").textContent = "Gallery • " + s.title;
+      $("#modalMeta").textContent = "seed " + s.seed;
+      $("#modalImg").src = s.src;
+      $("#modalH").textContent = s.title;
+      $("#modalP").textContent = s.caption + " — A small UI moment: modal motion + glass + crisp type.";
+      $("#kv1").textContent = s.title;
+      $("#kv2").textContent = s.mood;
+      $("#kv3").textContent = "Transitions + focus";
+      $("#kv4").textContent = s.detail;
+
+      makeChips($("#modalChips"), [rand(POOL.tags), rand(POOL.tags), rand(POOL.tags), rand(POOL.tags)]);
+      modal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      modal.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal) closeModal();
+    });
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
+    });
+
+    // -----------------------------
+    // Reveal on scroll
+    // -----------------------------
+    let revealObserver;
+    function observeReveals(){
+      if(revealObserver) revealObserver.disconnect();
+
+      const items = $$(".reveal");
+      revealObserver = new IntersectionObserver((entries) => {
+        for(const ent of entries){
+          if(ent.isIntersecting){
+            ent.target.classList.add("in");
+            revealObserver.unobserve(ent.target);
+          }
+        }
+      }, { threshold: 0.12 });
+
+      items.forEach((el) => {
+        el.classList.remove("in");
+        revealObserver.observe(el);
+      });
+    }
+
+    // -----------------------------
+    // Parallax + ambient widget
+    // -----------------------------
+    const parallaxHero = $("#parallaxHero");
+    let raf = null;
+
+    function onMove(e){
+      if(!state.ambient) return;
+      const r = parallaxHero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      const tx = (x - 0.5) * 10;
+      const ty = (y - 0.5) * 10;
+
+      if(raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        parallaxHero.style.transform = `translate(${tx}px, ${ty}px)`;
+      });
+    }
+    function onLeave(){
+      parallaxHero.style.transform = `translate(0px, 0px)`;
+    }
+    parallaxHero.addEventListener("mousemove", onMove);
+    parallaxHero.addEventListener("mouseleave", onLeave);
+
+    let weatherTimer = null;
+    function kickWeatherWidget(){
+      if(weatherTimer) clearInterval(weatherTimer);
+      const bar = $("#npBar");
+      const meta = $("#npMeta");
+      const left = $("#npLeft");
+      const right = $("#npRight");
+
+      const vis = ["Visibility: “knife-edge”", "Visibility: “milk glass”", "Visibility: “clear-ish”", "Visibility: “white room”"];
+      const temp = ["Temp: “bruised cold”", "Temp: “metal cold”", "Temp: “dry biting”", "Temp: “stop-and-breathe”"];
+      const gust = ["gusts building…", "wind easing…", "spindrift dancing…", "pressure rising…"];
+
+      let v = Math.floor(Math.random()*60) + 20;
+      bar.style.width = v + "%";
+      meta.textContent = rand(gust);
+      left.textContent = rand(vis);
+      right.textContent = rand(temp);
+
+      if(!state.ambient) return;
+
+      weatherTimer = setInterval(() => {
+        v += (Math.random() - 0.5) * 22;
+        v = clamp(v, 8, 96);
+        bar.style.width = v.toFixed(0) + "%";
+        if(Math.random() < 0.35) meta.textContent = rand(gust);
+        if(Math.random() < 0.20) left.textContent = rand(vis);
+        if(Math.random() < 0.20) right.textContent = rand(temp);
+      }, 1400);
+    }
+
+    // -----------------------------
+    // Toast
+    // -----------------------------
+    const toast = $("#toast");
+    let toastTimer = null;
+
+    function showToast(title, msg){
+      $("#toastTitle").textContent = title;
+      $("#toastMsg").textContent = msg;
+      toast.classList.add("show");
+      if(toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+    $("#toastHideBtn").addEventListener("click", () => toast.classList.remove("show"));
+
+    // -----------------------------
+    // Buttons
+    // -----------------------------
+    $("#randomizeBtn").addEventListener("click", () => {
+      shuffleAll();
+      showToast("Shuffled", "Content remixed. Scroll for fresh cards & captions.");
+    });
+
+    $("#ambientBtn").addEventListener("click", () => {
+      state.ambient = !state.ambient;
+      $("#ambientState").textContent = state.ambient ? "On" : "Off";
+      if(!state.ambient){
+        parallaxHero.style.transform = "translate(0px, 0px)";
+        if(weatherTimer) clearInterval(weatherTimer);
+        showToast("Ambient motion off", "Reduced motion: parallax + widget animation paused.");
+      }else{
+        kickWeatherWidget();
+        showToast("Ambient motion on", "Parallax + widget animation resumed.");
+      }
+    });
+
+    $("#copyBtn").addEventListener("click", async () => {
+      const text = rand(POOL.captions) + " — K2";
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("Copied", "“" + text + "”");
+      }catch(err){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast("Copied", "“" + text + "”");
+      }
+    });
+
+    // Smooth scrolling for internal anchors
+    $$(".nav a.pill").forEach(a => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        const id = a.getAttribute("href");
+        const target = document.querySelector(id);
+        if(target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    // initial build
+    setHero();
+    buildTagChips();
+    buildOverview();
+    buildGallery();
+    buildTimeline();
+    buildFacts();
+    observeReveals();
+    kickWeatherWidget();
+
+    // show a first-run tip toast
+    setTimeout(() => {
+      showToast("Tip", "Try “Shuffle”, open a gallery shot, and hover the hero for parallax.");
+    }, 900);
+
+    // update the timestamp in footer-ish spot
+    $("#lastShuffle").textContent = "Loaded: " + new Date().toLocaleString();
+  </script>
+</body>
+</html>

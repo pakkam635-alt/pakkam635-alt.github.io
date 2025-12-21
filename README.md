@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>1000cc is prince charming</h1>
-    <ol="A">
+    <ol type="A">
       <li>it makes u cool</li>
       <li>it gets u goth girls</li>
       <li>it demolishes all ur depression</li>
@@ -15,5 +15,6 @@
     <a href="https://saletidemk.click/product_tag/66901278_.html" target=_blank title="now shopyshopy">
       look further inside the hole!:)
     </a>
+    <p>you may <b>PERHAPS</b> not realise this, if that's so, stop fooling yourself, death is never real until this bike gives u a <i>soul</i> in the very first place. 1000<sub>cc</sub> is the satan that brings u right to where thou shalt deacease of the worst kind as u suffer, <mark>ur world is <del>peaced</del>.</mark></p>
   </body>
 </html>
